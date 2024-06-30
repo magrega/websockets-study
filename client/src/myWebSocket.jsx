@@ -18,6 +18,7 @@ const MyWebSock = () => {
                 id: Date.now(),
                 nickname
             }
+            setIsConnectSuc(true);
             socket.current.send(JSON.stringify(message))
             console.log('Connection open');
         }
@@ -27,11 +28,12 @@ const MyWebSock = () => {
             setMessages(prev => [message, ...prev])
         }
         socket.current.onclose = () => {
-            console.log('Socket закрыт')
+            console.log('Socket закрыт');
+            setIsConnectSuc(false);
         }
         socket.current.onerror = () => {
             setIsConnectSuc(false);
-            console.log('Socket закрыт')
+            console.log('Socket ошибка');
         }
     }
 
@@ -39,7 +41,6 @@ const MyWebSock = () => {
     const getNickname = (e) => {
         e.preventDefault();
         setNickname(e.target[0].value);
-        setIsConnectSuc(true);
         setIsLoggedIn(true);
     }
 
@@ -50,7 +51,7 @@ const MyWebSock = () => {
     }
 
     const makeNewSocket = () => {
-        socket.current = new WebSocket('ws://localhost:5000');
+        connect();
     }
 
     const sendMessage = (e) => {
